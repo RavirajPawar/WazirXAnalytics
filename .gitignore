@@ -140,9 +140,5 @@ cython_debug/
 
 .idea/
 
-
-#Music Folder
-static/music/
-
 #Excel files
 excel
