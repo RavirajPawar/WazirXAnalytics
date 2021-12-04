@@ -1,0 +1,23 @@
+{%extends 'layout.html'%}
+
+{%block body%}
+<div class="row">
+<!--    section 1 coin details-->
+    <div class="col">
+        <h4 class="text-success">{{market}}</h4>
+        <table class="table table-striped table-bordered">
+            <tbody>
+                {% for key, value in specific_trades.items() %}
+                    <tr><td><strong class="text-info">{{key}}</strong>
+                            <strong class="text-secondary">{{value}}</strong>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col"></div>
+</div>
+{%endblock%}

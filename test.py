@@ -1,5 +1,6 @@
-import pandas as pd
 import os
+
+import pandas as pd
 from pymongo import MongoClient
 
 """
@@ -20,12 +21,10 @@ REQUIRED_SHEETS = ['Additional Transfers',
                    'Deposits and Withdrawals'
                    ]
 
-
 connection = MongoClient()
 # deposites_and_withdrawals | exchange_trades | additional_transfers
 db = connection["wazirx_analytics"]
 counter = 0
-
 
 """
 prototype 1 for inserting data in dbs
@@ -40,6 +39,6 @@ for file in os.listdir(EXCEL_FILE_PATH)[:-3]:
         db["additional_transfers"].update(
             dict(row), dict(row), upsert=True)
 
-    print("-"*80)
+    print("-" * 80)
 
 print("counter ", counter)

@@ -2,37 +2,6 @@
 
 {%block body%}
 <div class="row">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">MARKET</th>
-            <th scope="col">total_coin_bought</th>
-            <th scope="col">total_buy_fees</th>
-            <th scope="col">total_investment_on_buy</th>
-            <th scope="col">total_coin_sold</th>
-            <th scope="col">total_sell_fees</th>
-            <th scope="col">total_sell_earning</th>
-            <th scope="col">Final_settlement</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for key, value in my_trades.items() %}
-        <tr>
-            <th scope="row">{{loop.index}}</th>
-            <td>{{key}}</td>
-            <td>{{value["total_coin_bought"]}}</td>
-            <td>{{value["total_buy_fees"]}}</td>
-            <td>{{value["total_investment_on_buy"]}}</td>
-            <td>{{value["total_coin_sold"]}}</td>
-            <td>{{value["total_sell_fees"]}}</td>
-            <td>{{value["total_sell_earning"]}}</td>
-            <td>Final_settlement</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
 
 </div>
 
