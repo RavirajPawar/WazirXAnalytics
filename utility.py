@@ -3,9 +3,14 @@ def total_portfolio(all_trades):
     calculate total fees, investment in your account
     Args:
         all_trades :- trades
-    Returns: dictionary key as market and details as value
+    Returns:
+        my_trades - dictionary key as market and details as value
+        buy_trades - list of buy trades
+        sell_trades - list of sell trades
     """
     my_trades = dict()
+    buy_trades = list()
+    sell_trades = list()
     for trade in all_trades:
         market = trade["Market"]
         volume = trade["Volume"]
@@ -18,11 +23,13 @@ def total_portfolio(all_trades):
                 my_trades[market]["total_coin_bought"] += volume
                 my_trades[market]["total_buy_fees"] += fee
                 my_trades[market]["total_investment_on_buy"] += amount
+                buy_trades.append(trade)
 
             elif order_type == "Sell":
                 my_trades[market]["total_coin_sold"] += volume
                 my_trades[market]["total_sell_fees"] += fee
                 my_trades[market]["total_sell_earning"] += amount
+                sell_trades.append(trade)
         else:
             my_trades[market] = dict()
             if order_type == "Buy":
@@ -32,6 +39,7 @@ def total_portfolio(all_trades):
                 my_trades[market]["total_coin_sold"] = 0
                 my_trades[market]["total_sell_fees"] = 0
                 my_trades[market]["total_sell_earning"] = 0
+                buy_trades.append(trade)
 
             elif order_type == "Sell":
                 my_trades[market]["total_coin_bought"] = 0
@@ -40,8 +48,9 @@ def total_portfolio(all_trades):
                 my_trades[market]["total_coin_sold"] = volume
                 my_trades[market]["total_sell_fees"] = fee
                 my_trades[market]["total_sell_earning"] = amount
+                sell_trades.append(trade)
 
-    return my_trades
+    return my_trades, buy_trades, sell_trades
 
 
 """
@@ -58,14 +67,22 @@ def coin_analyzer(specific_trades):
     {'total_coin_bought': 25.32, 'total_buy_fees': 10.994848000000001, 'total_investment_on_buy': 5497.424,
      'total_coin_sold': 6.5600000000000005, 'total_sell_fees': 4.358, 'total_sell_earning': 2179.0}
     """
+
+    specific_trades["coin_balance"] = specific_trades["total_coin_bought"] \
+                                      - specific_trades["total_coin_sold"]
+
     specific_trades["final_investment_on_buy"] = specific_trades["total_buy_fees"] \
                                                      + specific_trades["total_investment_on_buy"]
 
     specific_trades["final_sell_earning"] = specific_trades["total_sell_earning"] \
                                                 - specific_trades["total_sell_fees"]
 
-    specific_trades["coin_balance"] = specific_trades["total_coin_bought"] \
-                                      - specific_trades["total_coin_sold"]
+    specific_trades["avg_buy_price"] = specific_trades["final_investment_on_buy"]/specific_trades["total_coin_bought"]
+
+    try:
+        specific_trades["avg_sell_price"] = specific_trades["final_sell_earning"]/specific_trades["total_coin_sold"]
+    except ZeroDivisionError:
+        specific_trades["avg_sell_price"] = "You haven't done any sell yet"
 
     return specific_trades
 

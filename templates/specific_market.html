@@ -1,23 +1,91 @@
 {%extends 'layout.html'%}
 
 {%block body%}
+<div class="container row">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <th>MARKET</th><td>{{market}}</td>
+            <th>BALANCE</th><td>{{coin_data["coin_balance"]}}</td>
+            <th>24 Hr LOW</th><td>{{wazirx_coin_data["low"]}}</td>
+            <th>24 Hr HIGH</th><td>{{wazirx_coin_data["high"]}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+</div>
 <div class="row">
 <!--    section 1 coin details-->
     <div class="col">
-        <h4 class="text-success">{{market}}</h4>
         <table class="table table-striped table-bordered">
             <tbody>
-                {% for key, value in specific_trades.items() %}
-                    <tr><td><strong class="text-info">{{key}}</strong>
-                            <strong class="text-secondary">{{value}}</strong>
+                {% for key in BUY_KEYS %}
+                    <tr>
+                        <td><strong class="text-info">{{key}}</strong>
+                            <strong class="text-secondary">{{coin_data[key]}}</strong>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <div class="col"></div>
-    <div class="col"></div>
-    <div class="col"></div>
+
+<!--    section 2 coin buy table-->
+    <div class="col">
+        <h6>Buy Order Table</h6>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <th>Date</th>
+                <th>Volume</th>
+                <th>Price</th>
+            </thead>
+            <tbody>
+                {% for trade in buy_trades %}
+                    <tr>
+                        <td>{{trade["Date"]}}</td>
+                        <td>{{trade["Volume"]}}</td>
+                        <td>{{trade["Price"]}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<!--    section 3 coin sell table-->
+    <div class="col">
+        <h6>Sell Order Table</h6>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <th>Date</th>
+                <th>Volume</th>
+                <th>Price</th>
+            </thead>
+            <tbody>
+                {% for trade in sell_trades %}
+                    <tr>
+                        <td>{{trade["Date"]}}</td>
+                        <td>{{trade["Volume"]}}</td>
+                        <td>{{trade["Price"]}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<!--    section 4 coin Extra info table-->
+    <div class="col">
+        <table class="table table-striped table-bordered">
+            <tbody>
+
+                {% for key in SELL_KEYS %}
+                    <tr>
+                        <td><strong class="text-info">{{key}}</strong>
+                            <strong class="text-secondary">{{coin_data[key]}}</strong>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {%endblock%}
