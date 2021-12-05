@@ -64,8 +64,11 @@ print(original_key_map)
 
 def coin_analyzer(specific_trades):
     """
-    {'total_coin_bought': 25.32, 'total_buy_fees': 10.994848000000001, 'total_investment_on_buy': 5497.424,
-     'total_coin_sold': 6.5600000000000005, 'total_sell_fees': 4.358, 'total_sell_earning': 2179.0}
+    Returns additions coin balance, final investment, earnings aka booked profit, average buy and sell price
+    Args:
+          specific_trades :- wazirx basic data in key value pair -> dict
+    Returns:
+        specific_trades :- same dict with additional keys
     """
 
     specific_trades["coin_balance"] = specific_trades["total_coin_bought"] \
@@ -87,4 +90,24 @@ def coin_analyzer(specific_trades):
     return specific_trades
 
 
+def get_referral_data(referral_data):
+    referral_earnings = dict()
+    for record in referral_data:
+        if record["Currency"] in referral_earnings:
+            referral_earnings[record["Currency"]] += record["Amount"]
+        else:
+            referral_earnings[record["Currency"]] = record["Amount"]
+
+    return referral_earnings
+
+
+def get_total_deposits_and_withdrawals(deposits_and_withdrawals_data):
+    total_deposits_and_withdrawals = dict()
+    for record in deposits_and_withdrawals_data:
+        if record["Currency"] in total_deposits_and_withdrawals:
+            total_deposits_and_withdrawals[record["Currency"]] += record["Volume"]
+        else:
+            total_deposits_and_withdrawals[record["Currency"]] = record["Volume"]
+
+    return total_deposits_and_withdrawals
 
