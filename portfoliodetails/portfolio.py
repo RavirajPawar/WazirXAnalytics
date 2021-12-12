@@ -29,7 +29,7 @@ def portfolio(market=None):
                                                 coin_data["final_sell_earning"]) * 100) / \
                                               coin_data["final_investment_on_buy"]
 
-        return render_template("specific_market.html", coin_data=coin_data, market=market,
+        return render_template("portfoliodetails/specific_market.html", coin_data=coin_data, market=market,
                                BUY_KEYS=BUY_KEYS, SELL_KEYS=SELL_KEYS,
                                buy_trades=buy_trades, sell_trades=sell_trades,
                                wazirx_coin_data=wazirx_coin_data
@@ -37,4 +37,4 @@ def portfolio(market=None):
     else:
         all_trades = mongo.db.exchange_trades.find({}, {'_id': False})
         my_trades, _, _ = total_portfolio(all_trades)
-        return render_template("portfolio.html", my_trades=my_trades)
+        return render_template("portfoliodetails/portfolio.html", my_trades=my_trades)
