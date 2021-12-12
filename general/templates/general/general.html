@@ -2,7 +2,69 @@
 
 {%block body%}
 <div class="row">
+    <!--    section 1 file upload-->
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title text-center">File Upload section </h3>
+                <form class="form" enctype=multipart/form-data method=post>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroupFileAddon01">Select WazirX Reports Only</span>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control-file" id="file_uploader" multiple type="file">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--    section 2 Deposits and withdrawal-->
+    <div class="col">
+        <h4>Total Deposits and withdrawals</h4>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <th>Currency</th>
+            <th>Deposit</th>
+            <th>Withdrawal</th>
+            </thead>
+            <tbody>
+            {% for currency, transaction in total_deposits_and_withdrawals.items()%}
+            <tr>
+                <td>{{currency}}</td>
+                <td>{{transaction["Deposit"]}}</td>
+                <td>{{transaction["Withdrawal"]}}</td>
 
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    <!--    section 3 referral money-->
+    <div class="col">
+        <h4>Total referral money</h4>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <th>Currency</th>
+            <th>Amount</th>
+            </thead>
+            <tbody>
+            {% for currency, amount in referral_earnings.items()%}
+            <tr>
+                <td>{{currency}}</td>
+                <td>{{amount}}</td>
+
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!--    section 4 coin details-->
+    <div class="col">
+        <h4>News Analysis</h4>
+    </div>
 </div>
-
 {%endblock%}

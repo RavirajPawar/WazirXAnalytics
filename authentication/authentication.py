@@ -8,13 +8,13 @@ authentication_blueprint = Blueprint('authentication', __name__,
 @authentication_blueprint.route("/register")
 def register():
     temp = "register"
-    return render_template("authentication/auth.html", temp=temp)
+    return render_template("authentication/register.html", temp=temp)
 
 
 @authentication_blueprint.route("/login")
 def login():
     temp = "login"
-    return render_template("authentication/auth.html", temp=temp)
+    return render_template("authentication/login.html", temp=temp)
 
 
 @authentication_blueprint.route("/")
