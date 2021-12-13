@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session, redirect
 
 from database import mongo, bcrypt
 from .utility import register_user, fetch_user
@@ -40,9 +40,23 @@ def login():
         user_details = fetch_user(mongo, email)
         hashed_password = user_details["password"]
         if bcrypt.check_password_hash(hashed_password, password):
-            return render_template("authentication/login.html", msg="Password matched")
+            session["email"] = email
+            return redirect("/user")
         else:
             return render_template("authentication/login.html", error="Wrong Password.")
+
+
+@authentication_blueprint.route("/logout", methods=["GET", "POST"])
+def logout():
+    session["email"] = None     # assigned to None
+    session.clear()
+    return redirect("/login")
+
+
+@authentication_blueprint.route("/forgotPassword", methods=["POST"])
+def forgot_password():
+    session["email"] = None     # assigned to None
+    return redirect("authentication/forgot_password.html")
 
 
 @authentication_blueprint.route("/")
