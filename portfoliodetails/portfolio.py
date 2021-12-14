@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session, redirect
 from .constants import BUY_KEYS, SELL_KEYS, URL
 from .utility import total_portfolio, coin_analyzer
 from database import mongo
@@ -12,9 +12,12 @@ portfolio_blueprint = Blueprint('portfolio', __name__,
 @portfolio_blueprint.route("/portfolio/")
 @portfolio_blueprint.route("/portfolio/<string:market>/")
 def portfolio(market=None):
+    if not session.get("email"):
+        return redirect("/login")
+
     print("Passed market ", market)
     if market:
-        coin_specific_trades = mongo.db.exchange_trades.find({"Market": market}, {'_id': False})
+        coin_specific_trades = mongo.db.exchange_trades.find({"Market": market,"user":session.get("email")}, {'_id': False})
         coin_data, buy_trades, sell_trades = total_portfolio(coin_specific_trades)
         coin_data = coin_analyzer(coin_data[market])
         wazirx_coin_data = requests.get(URL.format(market.lower())).json()["ticker"]
@@ -35,6 +38,6 @@ def portfolio(market=None):
                                wazirx_coin_data=wazirx_coin_data
                                )
     else:
-        all_trades = mongo.db.exchange_trades.find({}, {'_id': False})
+        all_trades = mongo.db.exchange_trades.find({"user":session.get("email")}, {'_id': False})
         my_trades, _, _ = total_portfolio(all_trades)
         return render_template("portfoliodetails/portfolio.html", my_trades=my_trades)

@@ -6,13 +6,21 @@
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <h3 class="card-title text-center">File Upload section </h3>
-                <form class="form" enctype=multipart/form-data method=post>
+                {% if msg %}
+                <h3 class="card-title text-center text-success">{{msg}}</h3>
+                {% elif error %}
+                <h3 class="card-title text-center text-danger">{{error}}</h3>
+                {% else %}
+                <h3 class="card-title text-center text-warning">File Upload Section</h3>
+                {% endif %}
+
+                <form class="form" enctype=multipart/form-data method=post
+                      action="{{url_for('general.upload_file')}}">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroupFileAddon01">Select WazirX Reports Only</span>
                     </div>
                     <div class="form-group">
-                        <input class="form-control-file" id="file_uploader" multiple type="file">
+                        <input class="form-control-file" id="file_uploader" name = "file" multiple type="file">
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit">Upload</button>
