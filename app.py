@@ -8,10 +8,8 @@ from portfoliodetails.portfolio import portfolio_blueprint
 app = Flask(__name__)
 
 # adding configuration
-app.config["MONGO_URI"] = "mongodb://localhost:27017/wazirx_analytics"
-app.config["secret_key"] = "Raviraj_Developed_This_For_Cryto"
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_PERMANENT'] = False
+app.config.from_object("config.DevelopmentConfig")
+
 
 # initializing mongo, bcrypt and session
 mongo.init_app(app)
