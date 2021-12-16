@@ -1,5 +1,5 @@
 Flask == 1.1.2
-Flask-PyMongo == 2.3.0
+Flask-PyMongo[srv]
 pymongo == 3.12.1
 dnspython == 2.1.0
 requests == 2.26.0
