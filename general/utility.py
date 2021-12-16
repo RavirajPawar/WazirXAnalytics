@@ -1,3 +1,6 @@
+from .constants import ALLOWED_EXTENSIONS
+
+
 def get_referral_data(referral_data):
     referral_earnings = dict()
     for record in referral_data:
@@ -27,3 +30,20 @@ def get_total_deposits_and_withdrawals(deposits_and_withdrawals_data):
                 total_deposits_and_withdrawals[record["Currency"]]["Withdrawal"] = record["Volume"]
 
     return total_deposits_and_withdrawals
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def check_files(request):
+    if "file" not in request.files:
+        return "Please try again"
+    for file in request.files.getlist('file'):
+        if file.filename == '':
+            return 'No selected file'
+        if file and not allowed_file(file.filename):
+            return f"{file.filename} is not allowed"
+
+    return None

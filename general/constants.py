@@ -5,3 +5,5 @@ REQUIRED_SHEETS = ['Additional Transfers',
 COLLECTION_NAMES = ["additional_transfers",
                     "exchange_trades",
                     "deposits_and_withdrawals"]
+
+ALLOWED_EXTENSIONS = {'xlsx', 'xls'}

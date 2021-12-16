@@ -16,11 +16,11 @@
 
                 <form class="form" enctype=multipart/form-data method=post
                       action="{{url_for('general.upload_file')}}">
-                    <div class="input-group-prepend">
+                    <div class="form-group">
                         <span class="input-group-text" id="inputGroupFileAddon01">Select WazirX Reports Only</span>
                     </div>
                     <div class="form-group">
-                        <input class="form-control-file" id="file_uploader" name = "file" multiple type="file">
+                        <input class="form-control-file" id="file_uploader" name = "file"  type="file" multiple required>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit">Upload</button>
