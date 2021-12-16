@@ -145,3 +145,7 @@ excel
 
 #Flask Session
 flask_session
+
+#Procfile and config file
+Procfile
+config.py
