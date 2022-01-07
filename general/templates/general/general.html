@@ -14,13 +14,13 @@
                 <h3 class="card-title text-center text-warning">File Upload Section</h3>
                 {% endif %}
 
-                <form class="form" enctype=multipart/form-data method=post
-                      action="{{url_for('general.upload_file')}}">
+                <form action="{{url_for('general.upload_file')}}" class="form" enctype=multipart/form-data
+                      method=post>
                     <div class="form-group">
                         <span class="input-group-text" id="inputGroupFileAddon01">Select WazirX Reports Only</span>
                     </div>
                     <div class="form-group">
-                        <input class="form-control-file" id="file_uploader" name = "file"  type="file" multiple required>
+                        <input class="form-control-file" id="file_uploader" multiple name="file" required type="file">
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit">Upload</button>
@@ -29,50 +29,63 @@
             </div>
         </div>
     </div>
-    <!--    section 2 Deposits and withdrawal-->
-    <div class="col">
-        <h4>Total Deposits and withdrawals</h4>
-        <table class="table table-striped table-bordered">
-            <thead>
-            <th>Currency</th>
-            <th>Deposit</th>
-            <th>Withdrawal</th>
-            </thead>
-            <tbody>
-            {% for currency, transaction in total_deposits_and_withdrawals.items()%}
-            <tr>
-                <td>{{currency}}</td>
-                <td>{{transaction["Deposit"]}}</td>
-                <td>{{transaction["Withdrawal"]}}</td>
 
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <!--    section 2 News Analysis-->
+    <div class="col">
+
+        <div class="card">
+            <h4>News Analysis</h4>
+            <img alt="Bitcoin Fear &amp; Greed Index"
+                 class="img-fluid" src="https://alternative.me/crypto/fear-and-greed-index.png">
+            <a href="https://alternative.me/crypto/fear-and-greed-index/">Source: Fear&Greed</a>
+        </div>
+    </div>
+
+
+    <!--    section 3 Deposits and withdrawal | referral money-->
+    <div class="col">
+
+        <div class="card">
+            <h4>Total Deposits and withdrawals</h4>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <th>Currency</th>
+                <th>Deposit</th>
+                <th>Withdrawal</th>
+                </thead>
+                <tbody>
+                {% for currency, transaction in total_deposits_and_withdrawals.items()%}
+                <tr>
+                    <td>{{currency}}</td>
+                    <td>{{transaction["Deposit"]}}</td>
+                    <td>{{transaction["Withdrawal"]}}</td>
+
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <h4>Total referral money</h4>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <th>Currency</th>
+                <th>Amount</th>
+                </thead>
+                <tbody>
+                {% for currency, amount in referral_earnings.items()%}
+                <tr>
+                    <td>{{currency}}</td>
+                    <td>{{amount}}</td>
+
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
 
     </div>
-    <!--    section 3 referral money-->
-    <div class="col">
-        <h4>Total referral money</h4>
-        <table class="table table-striped table-bordered">
-            <thead>
-            <th>Currency</th>
-            <th>Amount</th>
-            </thead>
-            <tbody>
-            {% for currency, amount in referral_earnings.items()%}
-            <tr>
-                <td>{{currency}}</td>
-                <td>{{amount}}</td>
 
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <!--    section 4 coin details-->
-    <div class="col">
-        <h4>News Analysis</h4>
-    </div>
+
 </div>
 {%endblock%}

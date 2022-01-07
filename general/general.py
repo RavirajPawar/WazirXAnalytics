@@ -1,6 +1,5 @@
 import pandas as pd
 from flask import Blueprint, render_template, request, session, redirect, url_for
-
 from database import mongo
 from .constants import REQUIRED_SHEETS, COLLECTION_NAMES
 from .utility import get_referral_data, get_total_deposits_and_withdrawals, check_files
