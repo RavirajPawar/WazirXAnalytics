@@ -63,7 +63,7 @@ def upload_file():
                 df = pd.read_excel(file, sheet_name=sheet)
                 df["user"] = session["email"]  # added new column user with constant value users email
                 records = df.to_dict(orient='records')  # converted each row to dict
-                mongo.db[collection].insertMany(records, {"ordered": False})
+                mongo.db[collection].insert_many(records, {"ordered": False})
                 sheet_end_time = time.time()
                 print(f"Time taken form file {sheet} = {sheet_end_time-sheet_start_time}")
         end_time = time.time()
