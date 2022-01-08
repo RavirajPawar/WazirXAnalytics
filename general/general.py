@@ -46,14 +46,24 @@ def upload_file():
             return redirect(url_for(".user", error=file_status))
         import time
         start_time = time.time()
+        # for file in request.files.getlist('file'):
+        #     for sheet, collection in zip(REQUIRED_SHEETS, COLLECTION_NAMES):
+        #         sheet_start_time = time.time()
+        #         df = pd.read_excel(file, sheet_name=sheet)
+        #         for _, row in df.iterrows():
+        #             row = dict(row)
+        #             row["user"] = session["email"]
+        #             mongo.db[collection].update(dict(row), dict(row), upsert=True)
+        #         sheet_end_time = time.time()
+        #         print(f"Time taken form file {sheet} = {sheet_end_time-sheet_start_time}")
+
         for file in request.files.getlist('file'):
             for sheet, collection in zip(REQUIRED_SHEETS, COLLECTION_NAMES):
                 sheet_start_time = time.time()
                 df = pd.read_excel(file, sheet_name=sheet)
-                for _, row in df.iterrows():
-                    row = dict(row)
-                    row["user"] = session["email"]
-                    mongo.db[collection].update(dict(row), dict(row), upsert=True)
+                df["user"] = session["email"]  # added new column user with constant value users email
+                records = df.to_dict(orient='records')  # converted each row to dict
+                mongo.db[collection].insertMany(records, {"ordered": False})
                 sheet_end_time = time.time()
                 print(f"Time taken form file {sheet} = {sheet_end_time-sheet_start_time}")
         end_time = time.time()
