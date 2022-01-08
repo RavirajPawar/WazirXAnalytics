@@ -63,14 +63,13 @@ async def insert_document(collection_row_container):
 
 @general_blueprint.route("/upload-file", methods=["GET", "POST"])
 def upload_file():
+    start_time = time.time()
     if not session.get("email"):
         return redirect("/login")
     try:
         file_status = check_files(request)
         if file_status:
             return redirect(url_for(".user", error=file_status))
-
-        start_time = time.time()
         collection_row_container = {collection: [] for collection in COLLECTION_NAMES}
         for file in request.files.getlist('file'):
             for sheet, collection in zip(REQUIRED_SHEETS, COLLECTION_NAMES):

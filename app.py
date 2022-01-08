@@ -8,10 +8,10 @@ from portfoliodetails.portfolio import portfolio_blueprint
 app = Flask(__name__)
 
 # Dev configuration
-app.config.from_object("config.DevelopmentConfig")
+# app.config.from_object("config.DevelopmentConfig")
 
 # Prod configuration
-# app.config.from_object("config.ProductionConfig")
+app.config.from_object("config.ProductionConfig")
 
 # initializing mongo, bcrypt and session
 mongo.init_app(app)
