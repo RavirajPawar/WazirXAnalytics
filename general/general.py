@@ -1,5 +1,10 @@
+import asyncio
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 import pandas as pd
 from flask import Blueprint, render_template, request, session, redirect, url_for
+
 from database import mongo
 from .constants import REQUIRED_SHEETS, COLLECTION_NAMES
 from .utility import get_referral_data, get_total_deposits_and_withdrawals, check_files
@@ -36,6 +41,26 @@ def user():
                            msg=file_upload_msg, error=file_upload_error)
 
 
+def update_document(collection, document):
+    return mongo.db[collection].update(dict(document), dict(document), upsert=True)
+
+
+async def insert_document(collection_row_container):
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        loop = asyncio.get_event_loop()
+        tasks = list()
+        for collection, documents in collection_row_container.items():
+            for document in documents:
+                tasks.append(
+                    loop.run_in_executor(
+                        executor,
+                        update_document,
+                        *(collection, document)
+                    )
+                )
+        return await asyncio.gather(*tasks)
+
+
 @general_blueprint.route("/upload-file", methods=["GET", "POST"])
 def upload_file():
     if not session.get("email"):
@@ -44,30 +69,23 @@ def upload_file():
         file_status = check_files(request)
         if file_status:
             return redirect(url_for(".user", error=file_status))
-        import time
-        start_time = time.time()
-        # for file in request.files.getlist('file'):
-        #     for sheet, collection in zip(REQUIRED_SHEETS, COLLECTION_NAMES):
-        #         sheet_start_time = time.time()
-        #         df = pd.read_excel(file, sheet_name=sheet)
-        #         for _, row in df.iterrows():
-        #             row = dict(row)
-        #             row["user"] = session["email"]
-        #             mongo.db[collection].update(dict(row), dict(row), upsert=True)
-        #         sheet_end_time = time.time()
-        #         print(f"Time taken form file {sheet} = {sheet_end_time-sheet_start_time}")
 
+        start_time = time.time()
+        collection_row_container = {collection: [] for collection in COLLECTION_NAMES}
         for file in request.files.getlist('file'):
             for sheet, collection in zip(REQUIRED_SHEETS, COLLECTION_NAMES):
-                sheet_start_time = time.time()
                 df = pd.read_excel(file, sheet_name=sheet)
                 df["user"] = session["email"]  # added new column user with constant value users email
-                records = df.to_dict(orient='records')  # converted each row to dict
-                mongo.db[collection].insert_many(records, {"ordered": False})
-                sheet_end_time = time.time()
-                print(f"Time taken form file {sheet} = {sheet_end_time-sheet_start_time}")
+                documents = df.to_dict(orient='records')  # converted each row to dict
+                collection_row_container[collection].extend(documents)
+
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        future = asyncio.ensure_future(insert_document(collection_row_container))
+        loop.run_until_complete(future)
         end_time = time.time()
-        return redirect(url_for(".user", msg=f"File Uploaded Successfully Time taken {end_time-start_time}"))
+        return redirect(url_for(".user", msg=f"File Uploaded Successfully Time taken {end_time - start_time}"))
 
     except Exception as e:
+        print(e)
         return redirect(url_for(".user", error=str(e)))
