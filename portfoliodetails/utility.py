@@ -1,3 +1,6 @@
+from .constants import USDT_REGEX, BTC_REGEX
+
+
 def total_portfolio(all_trades):
     """
     calculate total fees, investment in your account
@@ -64,26 +67,28 @@ print(original_key_map)
 
 def coin_analyzer(specific_trades):
     """
-    Returns additions coin balance, final investment, earnings aka booked profit, average buy and sell price
-    Args:
-          specific_trades :- wazirx basic data in key value pair -> dict
-    Returns:
-        specific_trades :- same dict with additional keys
+        addition of coin balance, final investment, earnings aka booked profit, average buy and sell price
+
+        Args:
+              specific_trades :- wazirx basic data in key value pair -> dict
+
+        Returns:
+            specific_trades :- same dict with additional keys
     """
 
     specific_trades["coin_balance"] = specific_trades["total_coin_bought"] \
                                       - specific_trades["total_coin_sold"]
 
     specific_trades["final_investment_on_buy"] = specific_trades["total_buy_fees"] \
-                                                     + specific_trades["total_investment_on_buy"]
+                                                 + specific_trades["total_investment_on_buy"]
 
     specific_trades["final_sell_earning"] = specific_trades["total_sell_earning"] \
-                                                - specific_trades["total_sell_fees"]
+                                            - specific_trades["total_sell_fees"]
 
-    specific_trades["avg_buy_price"] = specific_trades["final_investment_on_buy"]/specific_trades["total_coin_bought"]
+    specific_trades["avg_buy_price"] = specific_trades["final_investment_on_buy"] / specific_trades["total_coin_bought"]
 
     try:
-        specific_trades["avg_sell_price"] = specific_trades["final_sell_earning"]/specific_trades["total_coin_sold"]
+        specific_trades["avg_sell_price"] = specific_trades["final_sell_earning"] / specific_trades["total_coin_sold"]
     except ZeroDivisionError:
         specific_trades["avg_sell_price"] = "You haven't done any sell yet"
 
@@ -118,6 +123,28 @@ def get_total_deposits_and_withdrawals(deposits_and_withdrawals_data):
                 total_deposits_and_withdrawals[record["Currency"]]["Deposit"] = 0
                 total_deposits_and_withdrawals[record["Currency"]]["Withdrawal"] = record["Volume"]
 
-
     return total_deposits_and_withdrawals
 
+
+def rate_converter(my_trades, usdt_rate, btc_rate):
+    """
+        Some trades are done in USDT and BTC pair. To get correct analysis rate needs to convert in INR
+
+        Args:
+              my_trades : dict of all trades details key as coin with pair
+              usdt_rate : dict which tells current price of USDT
+              btc_rate : dict which tells current price of BTC
+
+        Returns:
+              my_trades : where each key is multiplied by matching pair coins current rate
+
+    """
+
+    for coin_pair in my_trades:
+        if USDT_REGEX.search(coin_pair):
+            my_trades[coin_pair]["total_investment_on_buy"] *= float(usdt_rate["sell"])
+            my_trades[coin_pair]["total_sell_earning"] *= float(usdt_rate["sell"])
+        elif BTC_REGEX.search(coin_pair):
+            my_trades[coin_pair]["total_investment_on_buy"] *= float(btc_rate["sell"])
+            my_trades[coin_pair]["total_sell_earning"] *= float(btc_rate["sell"])
+    return my_trades
