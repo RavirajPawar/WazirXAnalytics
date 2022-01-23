@@ -1,115 +1,175 @@
 {%extends 'portfoliodetails/layout.html'%}
 
 {%block body%}
-<div class="container row">
-    <table class="table table-bordered">
-        <tbody>
-        <tr>
-            <th class="table-primary">MARKET</th>
-            <td class="table-warning"><strong>{{market}}</strong></td>
-            <th class="table-primary">BALANCE</th>
-            <td class="table-warning">{{coin_data["coin_balance"]}}</td>
-            <th class="table-primary">24 Hr LOW</th>
-            <td class="table-warning">{{wazirx_coin_data["low"]}}</td>
-            <th class="table-primary">24 Hr HIGH</th>
-            <td class="table-warning">{{wazirx_coin_data["high"]}}</td>
-        </tr>
-        <tr>
-            {% if wazirx_coin_data["overall_roi"] >0 %}
-            <th class="table-success">Overall ROI %</th>
-            <td class="table-success">{{wazirx_coin_data["overall_roi"]}}</td>
-            {%else%}
-            <th class="table-danger">Overall ROI %</th>
-            <td class="table-danger">{{wazirx_coin_data["overall_roi"]}}</td>
-            {% endif %}
-            {% if wazirx_coin_data["coin_roi"] >0 %}
-            <th class="table-success">Coin ROI %</th>
-            <td class="table-success">{{wazirx_coin_data["coin_roi"]}}</td>
-            {%else%}
-            <th class="table-danger">Coin ROI %</th>
-            <td class="table-danger">{{wazirx_coin_data["coin_roi"]}}</td>
-            {% endif %}
-            <th class="table-primary">Current Sell Price</th>
-            <td class="table-warning">{{wazirx_coin_data["sell"]}}</td>
-            <th class="table-primary">Current Buy Price</th>
-            <td class="table-warning">{{wazirx_coin_data["buy"]}}</td>
-        </tr>
-        </tbody>
-    </table>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <table class="table table-bordered">
+                <thead>
+                <th >Factor</th>
+                <th >Major</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <th class="table-primary">MARKET | BALANCE</th>
+                    <td class="table-warning">{{market}} | {{coin_data["coin_balance"]}}</td>
+                </tr>
+                <tr>
+                    {% if wazirx_coin_data["overall_roi"] > 0 %}
+                    <th class="table-success">Overall ROI %</th>
+                    <td class="table-success">{{wazirx_coin_data["overall_roi"]}}</td>
+                    {%else%}
+                    <th class="table-danger">Overall ROI %</th>
+                    <td class="table-danger">{{wazirx_coin_data["overall_roi"]}}</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% if wazirx_coin_data["coin_roi"] > 0 %}
+                    <td class="table-success">Coin ROI %</td>
+                    <td class="table-success">{{wazirx_coin_data["coin_roi"]}}</td>
+                    {%else%}
+                    <th class="table-danger">Coin ROI %</th>
+                    <td class="table-danger">{{wazirx_coin_data["coin_roi"]}}</td>
+                    {% endif %}
+                </tr>
+                </tbody>
+            </table>
 
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <table class="table table-bordered">
+                <thead>
+                <th>Factor</th>
+                <th>Price</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <th class="table-primary">24 Hr LOW | HIGH Price</th>
+                    <td class="table-warning">{{wazirx_coin_data["low"]}} | {{wazirx_coin_data["high"]}}</td>
+                </tr>
+                <tr>
+                    <th class="table-primary">Current BUY | SELL Price</th>
+                    <td class="table-warning">{{wazirx_coin_data["buy"]}} | {{wazirx_coin_data["sell"]}}</td>
+                </tr>
+                <tr>
+                    {% if coin_data["final_sell_earning"] - coin_data["final_investment_on_buy"] > 0 %}
+                    <th class="table-success">Profit Booked</th>
+                    <td class="table-success">{{coin_data["final_sell_earning"] -
+                        coin_data["final_investment_on_buy"]}}
+                    </td>
+                    {%else%}
+                    <th class="table-danger">Profit Booked</th>
+                    <td class="table-success">{{coin_data["final_sell_earning"] -
+                        coin_data["final_investment_on_buy"]}}
+                    </td>
+                    {% endif %}
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <!--    section 1 coin buy info details-->
+    <div class="col">
+        <div class="card">
+            <div class="card-header text-white bg-secondary"><h6>Buying Details</h6></div>
+            <div class="card-body ">
+                <table class="table table-striped table-bordered">
+                    <tbody>
+                    {% for key in BUY_KEYS %}
+                    <tr>
+                        <td><strong class="text-info">{{key}}</strong>
+                            <strong class="text-secondary">{{coin_data[key]}}</strong>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--    section 2 coin sell info table-->
+    <div class="col">
+        <div class="card">
+            <div class="card-header text-white bg-secondary"><h6>Selling Details</h6></div>
+            <div class="card-body">
+                <table class="table table-striped table-bordered">
+                    <tbody>
+
+                    {% for key in SELL_KEYS %}
+                    <tr>
+                        <td><strong class="text-info">{{key}}</strong>
+                            <strong class="text-secondary">{{coin_data[key]}}</strong>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 </div>
-<div class="row">
-    <!--    section 1 coin details-->
-    <div class="col">
-        <h6>Buying Details</h6>
-        <table class="table table-striped table-bordered">
-            <tbody>
-            {% for key in BUY_KEYS %}
-            <tr>
-                <td><strong class="text-info">{{key}}</strong>
-                    <strong class="text-secondary">{{coin_data[key]}}</strong>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <!--    section 2 coin buy table-->
-    <div class="col">
-        <h6>Buy Order Table</h6>
-        <table class="table table-striped table-bordered">
-            <thead>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Price</th>
-            </thead>
-            <tbody>
-            {% for trade in buy_trades %}
-            <tr>
-                <td>{{trade["Date"]}}</td>
-                <td>{{trade["Total"]}}</td>
-                <td>{{trade["Price"]}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <!--    section 3 coin sell table-->
-    <div class="col">
-        <h6>Sell Order Table</h6>
-        <table class="table table-striped table-bordered">
-            <thead>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Price</th>
-            </thead>
-            <tbody>
-            {% for trade in sell_trades %}
-            <tr>
-                <td>{{trade["Date"]}}</td>
-                <td>{{trade["Total"]}}</td>
-                <td>{{trade["Price"]}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <!--    section 4 coin Extra info table-->
-    <div class="col">
-        <h6>Selling Details</h6>
-        <table class="table table-striped table-bordered">
-            <tbody>
 
-            {% for key in SELL_KEYS %}
-            <tr>
-                <td><strong class="text-info">{{key}}</strong>
-                    <strong class="text-secondary">{{coin_data[key]}}</strong>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+
+<div class="row">
+    <!--    section 3 coin buy table-->
+    <div class="col">
+        <div class="card">
+            <div class="card-header text-white bg-secondary"><h6>Buy Order Table</h6></div>
+            <div class="card-body">
+                <table class="table table-striped table-bordered" id="buy_table">
+                    <thead>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Price</th>
+                    </thead>
+                    <tbody>
+                    {% for trade in buy_trades %}
+                    <tr>
+                        <td>{{trade["Date"]}}</td>
+                        <td>{{trade["Total"]}}</td>
+                        <td>{{trade["Price"]}}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+    <!--    section 4 coin sell table-->
+    <div class="col">
+        <div class="card">
+            <div class="card-header text-white bg-secondary"><h6>Sell Order Table</h6></div>
+            <div class="card-body">
+                <table class="table table-striped table-bordered" id="sell_table">
+                    <thead>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Price</th>
+                    </thead>
+                    <tbody>
+                    {% for trade in sell_trades %}
+                    <tr>
+                        <td>{{trade["Date"]}}</td>
+                        <td>{{trade["Total"]}}</td>
+                        <td>{{trade["Price"]}}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
 {%endblock%}

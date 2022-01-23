@@ -22,6 +22,7 @@ def portfolio(market=None):
         coin_data = coin_analyzer(coin_data[market])
         wazirx_coin_data = requests.get(URL.format(market.lower())).json()["ticker"]
         wazirx_coin_data["coin_roi"] = ((float(wazirx_coin_data["sell"]) * 100) / coin_data["avg_buy_price"]) - 100
+        wazirx_coin_data["coin_roi"] = round(wazirx_coin_data["coin_roi"], 2)
 
         if (coin_data["final_investment_on_buy"] - coin_data["final_sell_earning"]) > 0:
             wazirx_coin_data["overall_roi"] = (float(wazirx_coin_data["sell"]) * coin_data["coin_balance"] * 100) / \
@@ -31,6 +32,7 @@ def portfolio(market=None):
             wazirx_coin_data["overall_roi"] = (((float(wazirx_coin_data["sell"]) * coin_data["coin_balance"]) + \
                                                 coin_data["final_sell_earning"]) * 100) / \
                                               coin_data["final_investment_on_buy"]
+        wazirx_coin_data["overall_roi"] = round(wazirx_coin_data["overall_roi"], 2)
 
         return render_template("portfoliodetails/specific_market.html", coin_data=coin_data, market=market,
                                BUY_KEYS=BUY_KEYS, SELL_KEYS=SELL_KEYS,
