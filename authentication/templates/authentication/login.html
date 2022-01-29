@@ -1,17 +1,17 @@
 {%extends 'authentication/layout.html'%}
 
 {%block body%}
-<div class="container row">
+
     <div class="jumbotron">
         <form method="post">
 
             <div class="form-group">
                 {% if error %}
-                    <h3 class="text-danger"> {{error}} </h3>
+                <h3 class="text-danger"> {{error}} </h3>
                 {% elif msg %}
-                    <h3 class="text-success"> {{msg}} </h3>
+                <h3 class="text-success"> {{msg}} </h3>
                 {% else %}
-                    <h3 class="text-warning"> Welcome to WazirX Analytics </h3>
+                <h3 class="text-warning"> Welcome to WazirX Analytics </h3>
                 {% endif%}
 
             </div>
@@ -25,7 +25,8 @@
             <div class="form-group">
 
                 <dt><label for="password">PASSWORD</label>
-                <dd><input class="form-control" id="password" name="password" required type="password" value=""></dd>
+                <dd><input class="form-control" id="password" name="password" required type="password" value="">
+                </dd>
 
             </div>
 
@@ -38,6 +39,5 @@
 
         </form>
     </div>
-</div>
 
 {%endblock%}

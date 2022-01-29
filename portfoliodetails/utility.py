@@ -147,4 +147,21 @@ def rate_converter(my_trades, usdt_rate, btc_rate):
         elif BTC_REGEX.search(coin_pair):
             my_trades[coin_pair]["total_investment_on_buy"] *= float(btc_rate["sell"])
             my_trades[coin_pair]["total_sell_earning"] *= float(btc_rate["sell"])
+
+        my_trades[coin_pair]["profit_booking"] = (my_trades[coin_pair]["total_sell_earning"] +
+                                                      my_trades[coin_pair]["total_sell_fees"] -
+                                                      my_trades[coin_pair]["total_investment_on_buy"] +
+                                                      my_trades[coin_pair]["total_buy_fees"]
+                                                      )
+    return my_trades
+
+
+def round_fig(my_trades):
+    """
+        Converts trade detail numbers to 3 digits.
+    """
+    for coin_pair in my_trades:
+        for parameter in my_trades[coin_pair]:
+            my_trades[coin_pair][parameter] = round(my_trades[coin_pair][parameter], 3)
+
     return my_trades

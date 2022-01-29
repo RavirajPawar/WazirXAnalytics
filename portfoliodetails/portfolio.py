@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect
 from .constants import BUY_KEYS, SELL_KEYS, URL, USDT_RATE, BTC_RATE
-from .utility import total_portfolio, coin_analyzer, rate_converter
+from .utility import total_portfolio, coin_analyzer, rate_converter, round_fig
 from database import mongo
 import requests
 
@@ -45,4 +45,5 @@ def portfolio(market=None):
         btc_rate = requests.get(BTC_RATE).json()["ticker"]
         my_trades, _, _ = total_portfolio(all_trades)
         my_trades = rate_converter(my_trades, usdt_rate, btc_rate)
+        my_trades = round_fig(my_trades)
         return render_template("portfoliodetails/portfolio.html", my_trades=my_trades)

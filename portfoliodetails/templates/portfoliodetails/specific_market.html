@@ -6,8 +6,8 @@
         <div class="card">
             <table class="table table-bordered">
                 <thead>
-                <th >Factor</th>
-                <th >Major</th>
+                <th>Factor</th>
+                <th>Major</th>
                 </thead>
                 <tbody>
                 <tr>
@@ -61,7 +61,7 @@
                     </td>
                     {%else%}
                     <th class="table-danger">Profit Booked</th>
-                    <td class="table-success">{{coin_data["final_sell_earning"] -
+                    <td class="table-danger">{{coin_data["final_sell_earning"] -
                         coin_data["final_investment_on_buy"]}}
                     </td>
                     {% endif %}
