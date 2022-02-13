@@ -2,6 +2,16 @@ from .constants import ALLOWED_EXTENSIONS
 
 
 def get_referral_data(referral_data):
+    """
+    Calculates total earning through referral.
+    Referral earning can happen in different coins like WRX, USDT, INR
+
+    Args:
+        referral_data: mongo db find iterable
+
+    Returns:
+        earning in each type coin eg {WRX:10, USDT:10}
+    """
     referral_earnings = dict()
     for record in referral_data:
         if record["Currency"] in referral_earnings:
@@ -13,6 +23,15 @@ def get_referral_data(referral_data):
 
 
 def get_total_deposits_and_withdrawals(deposits_and_withdrawals_data):
+    """
+    Calculates total deposits and withdrawals
+
+    Args:
+        deposits_and_withdrawals_data : mongo db find iterable
+
+    Returns:
+        total_deposits_and_withdrawals : dict of dict eg {INR:{deposit:10, withdrawal:40}}
+    """
     total_deposits_and_withdrawals = dict()
     for record in deposits_and_withdrawals_data:
         if record["Currency"] in total_deposits_and_withdrawals:
@@ -33,11 +52,15 @@ def get_total_deposits_and_withdrawals(deposits_and_withdrawals_data):
 
 
 def allowed_file(filename):
+    "Returns file type is allowed or not"
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def check_files(request):
+    """
+    Checks multiple files allowed or not with different conditions.
+    """
     if "file" not in request.files:
         return "Please try again"
     for file in request.files.getlist('file'):

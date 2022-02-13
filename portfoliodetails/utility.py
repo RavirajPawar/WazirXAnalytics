@@ -3,11 +3,14 @@ from .constants import USDT_REGEX, BTC_REGEX
 
 def total_portfolio(all_trades):
     """
-    calculate total fees, investment in your account
+    calculate total fees, total investment , total profit for each coin from total portfolio.
+
     Args:
-        all_trades :- trades
+        all_trades :- iterable mongo db find result [{market:BTCINR, volume:0.5}, {market:SCINR, volume:12}]
+
     Returns:
-        my_trades - dictionary key as market and details as value
+        my_trades - dictionary key as market and details as value which is again dict.
+        {BTCINR:{total_buy_fees:1, total_investment_on_buy:12}, SCINR:{total_buy_fees:2, total_investment_on_buy:234}}
         buy_trades - list of buy trades
         sell_trades - list of sell trades
     """
@@ -65,65 +68,34 @@ print(original_key_map)
 """
 
 
-def coin_analyzer(specific_trades):
+def coin_analyzer(specific_trade):
     """
-        addition of coin balance, final investment, earnings aka booked profit, average buy and sell price
+        calculates average buy and sell price, total investment and booked profit aka  final_sell_earning
 
         Args:
-              specific_trades :- wazirx basic data in key value pair -> dict
+              specific_trade :- dict of keys total_coin_bought, total_coin_sold, total_sell_earning
 
         Returns:
-            specific_trades :- same dict with additional keys
+            specific_trade :- same dict with additional keys final_investment_on_buy, avg_buy_price
     """
 
-    specific_trades["coin_balance"] = specific_trades["total_coin_bought"] \
-                                      - specific_trades["total_coin_sold"]
+    specific_trade["coin_balance"] = specific_trade["total_coin_bought"] \
+                                     - specific_trade["total_coin_sold"]
 
-    specific_trades["final_investment_on_buy"] = specific_trades["total_buy_fees"] \
-                                                 + specific_trades["total_investment_on_buy"]
+    specific_trade["final_investment_on_buy"] = specific_trade["total_buy_fees"] \
+                                                + specific_trade["total_investment_on_buy"]
 
-    specific_trades["final_sell_earning"] = specific_trades["total_sell_earning"] \
-                                            - specific_trades["total_sell_fees"]
+    specific_trade["final_sell_earning"] = specific_trade["total_sell_earning"] \
+                                           - specific_trade["total_sell_fees"]
 
-    specific_trades["avg_buy_price"] = specific_trades["final_investment_on_buy"] / specific_trades["total_coin_bought"]
+    specific_trade["avg_buy_price"] = specific_trade["final_investment_on_buy"] / specific_trade["total_coin_bought"]
 
     try:
-        specific_trades["avg_sell_price"] = specific_trades["final_sell_earning"] / specific_trades["total_coin_sold"]
+        specific_trade["avg_sell_price"] = specific_trade["final_sell_earning"] / specific_trade["total_coin_sold"]
     except ZeroDivisionError:
-        specific_trades["avg_sell_price"] = "You haven't done any sell yet"
+        specific_trade["avg_sell_price"] = "You haven't done any sell yet"
 
-    return specific_trades
-
-
-def get_referral_data(referral_data):
-    referral_earnings = dict()
-    for record in referral_data:
-        if record["Currency"] in referral_earnings:
-            referral_earnings[record["Currency"]] += record["Amount"]
-        else:
-            referral_earnings[record["Currency"]] = record["Amount"]
-
-    return referral_earnings
-
-
-def get_total_deposits_and_withdrawals(deposits_and_withdrawals_data):
-    total_deposits_and_withdrawals = dict()
-    for record in deposits_and_withdrawals_data:
-        if record["Currency"] in total_deposits_and_withdrawals:
-            if record["Transaction"] == "Deposit":
-                total_deposits_and_withdrawals[record["Currency"]]["Deposit"] += record["Volume"]
-            else:
-                total_deposits_and_withdrawals[record["Currency"]]["Withdrawal"] += record["Volume"]
-        else:
-            total_deposits_and_withdrawals[record["Currency"]] = dict()
-            if record["Transaction"] == "Deposit":
-                total_deposits_and_withdrawals[record["Currency"]]["Deposit"] = record["Volume"]
-                total_deposits_and_withdrawals[record["Currency"]]["Withdrawal"] = 0
-            else:
-                total_deposits_and_withdrawals[record["Currency"]]["Deposit"] = 0
-                total_deposits_and_withdrawals[record["Currency"]]["Withdrawal"] = record["Volume"]
-
-    return total_deposits_and_withdrawals
+    return specific_trade
 
 
 def rate_converter(my_trades, usdt_rate, btc_rate):
@@ -149,10 +121,10 @@ def rate_converter(my_trades, usdt_rate, btc_rate):
             my_trades[coin_pair]["total_sell_earning"] *= float(btc_rate["sell"])
 
         my_trades[coin_pair]["profit_booking"] = (my_trades[coin_pair]["total_sell_earning"] +
-                                                      my_trades[coin_pair]["total_sell_fees"] -
-                                                      my_trades[coin_pair]["total_investment_on_buy"] +
-                                                      my_trades[coin_pair]["total_buy_fees"]
-                                                      )
+                                                  my_trades[coin_pair]["total_sell_fees"] -
+                                                  my_trades[coin_pair]["total_investment_on_buy"] +
+                                                  my_trades[coin_pair]["total_buy_fees"]
+                                                  )
     return my_trades
 
 
